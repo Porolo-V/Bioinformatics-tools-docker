@@ -1,7 +1,7 @@
-    # Используем базовый образ Ubuntu
+    # Ubuntu
     FROM ubuntu:22.04
 
-    # Установка необходимых пакетов и инструментов
+    # Installation of necessary packages and tools
     RUN apt-get update && \
     apt-get install -y \
     wget \
@@ -23,13 +23,13 @@
     libncursesw5-dev \
     && rm -rf /var/lib/apt/lists/*
 
-    # Определяем переменную окружения для папки установки
+    # Specify the environment variable for the installation folder
     ENV SOFT=/soft
 
-    # Создаем целевую директорию
+    # Creating a target directory
     RUN mkdir -p $SOFT
 
-    # Установка и сборка libdeflate
+    # Installation and assembling libdeflate
     RUN cd /tmp \
     && wget https://github.com/ebiggers/libdeflate/archive/refs/tags/v1.20.tar.gz \
     && tar -xzf v1.20.tar.gz \
@@ -43,7 +43,7 @@
     && rm -rf /tmp/libdeflate-1.20* \
     && ln -s $SOFT/libdeflate-1.20-br240323 $SOFT/libdeflate
 
-    # Установка и сборка htslib
+    # Installation and assembling htslib
     RUN cd /tmp \
     && wget https://github.com/samtools/htslib/releases/download/1.20/htslib-1.20.tar.bz2 \
     && tar -xjf htslib-1.20.tar.bz2 \
@@ -56,7 +56,7 @@
     && rm -rf /tmp/htslib-1.20* \
     && ln -s $SOFT/htslib-1.20-br240415 $SOFT/htslib
 
-    # Установка и сборка samtools
+    # Installation and assembling samtools
     RUN cd /tmp \
     && wget https://github.com/samtools/samtools/archive/refs/tags/1.20.tar.gz \
     && tar -xzf 1.20.tar.gz \
@@ -69,7 +69,7 @@
     && rm -rf /tmp/samtools-1.20* \
     && ln -s $SOFT/samtools-1.20-br240415 $SOFT/samtools
 
-    # Установка и сборка bcftools
+    # Installation and assembling bcftools
     RUN cd /tmp \
     && wget     https://github.com/samtools/bcftools/releases/download/1.20/bcftools-1.20.tar.bz2 \
     && tar -xjf bcftools-1.20.tar.bz2 \
@@ -81,7 +81,7 @@
     && rm -rf /tmp/bcftools-1.20* \
     && ln -s $SOFT/bcftools-1.20-br240415 $SOFT/bcftools
 
-    # Установка и сборка vcftools
+    # Installation and assembling vcftools
     RUN cd /tmp \
     && wget https://github.com/vcftools/vcftools/archive/refs/tags/v0.1.16.tar.gz \
     && tar -xzf v0.1.16.tar.gz \
@@ -93,20 +93,20 @@
     && rm -rf /tmp/vcftools-0.1.16* \
     && ln -s $SOFT/vcftools-0.1.16-br180802 $SOFT/vcftools
 
-    # Обновление переменной PATH
+    # Update variable PATH
     ENV PATH=$SOFT/libdeflate-1.20-br240323/bin:$PATH
     ENV PATH=$SOFT/htslib-1.20-br240415/bin:$PATH
     ENV PATH=$SOFT/samtools-1.20-br240415/bin:$PATH
     ENV PATH=$SOFT/bcftools-1.20-br240415/bin:$PATH
     ENV PATH=$SOFT/vcftools-0.1.16-br180802/bin:$PATH
     
-    # Обновление переменной LD_LIBRARY_PATH
+    # Update variable LD_LIBRARY_PATH
     ENV LD_LIBRARY_PATH=$SOFT/htslib-1.20-br240415/lib:$LD_LIBRARY_PATH
 
-    # Определяем рабочий каталог
+    # Defining a working directory
     WORKDIR /soft
 
-    # Указываем команду по умолчанию
+    # Specify the default command
     CMD ["bash"]
 
 
